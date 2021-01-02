@@ -245,3 +245,159 @@
 				}
 			}
 		```
+		
+## react中的事件处理
+	（1）通过onXxx属性指定事件处理函数（注意大小写）
+			a. React使用的是自定义（合成）事件，而不是使用的原生DOM事件----为了更好的兼容性
+			b.Reakct中的事件是通过事件委托方式处理的（委托给组件最外层的元素）----为了高效
+	（2）通过event.target得到发生事件的DOM元素对象（勿过度使用ref）
+	
+## react收集表单数据
+		### 受控组件
+			随着输入维护状态就是受控,最大的优势就是可以省略ref
+		```
+			class Login extends React.Component {
+				state = {
+					username: '', // 用户名
+					password: '' // 密码
+				}
+				
+				render() {
+					return (
+						<form action="http://www.baidu.com" onSubmit={this.handleSubmit}>
+							用户名： <input type="text" 
+							onChange={this.saveUsername}
+							name="username>
+							密码 <input type="passsword" 
+							onChange={this.savePassword}
+							name="password">
+							<button>登录</button>
+						</form>
+					)
+				}
+				handleSubmit = (event) => {
+					// 阻止表单默认提交
+					
+				}
+				// 保存用户名到状态中
+				saveUsername = (event) => {
+					console.log(event.target.value)
+				}
+			}
+			ReactDOM.reander(<Login />, document.getElementById('test'))
+		```
+		### 非受控组件
+			dom元素是现用现取
+		```
+			class Login extends React.Component {
+				render() {
+					return (
+						<form action="http://www.baidu.com" onSubmit={this.handleSubmit}>
+							用户名： <input type="text" ref={c => this.username = c} name="username>
+							密码 <input type="passsword" ref={c => this.password = c}  name="password">
+							<button>登录</button>
+						</form>
+					)
+				}
+				handleSubmit = (event) => {
+					// 阻止表单默认提交
+					event.preventDefault()
+					
+				}
+			}
+			ReactDOM.reander(<Login />, document.getElementById('test'))
+		```
+	
+## 函数柯里化
+		
+			通过函数调用继续返回函数的方式，实现多次接受参数最后统一处理的函数编码形式
+			通过事件调用添加括号是直接执行返回一个值，可以返回一个函数解决返回undefined的问题。
+		```
+			saveFormDate = dataType => {
+				//在这里传入event，获
+				取event
+				return (event) => {
+					this.setState({
+						[dataType]: event.target.value
+					})
+				}
+			}
+		```
+		### 不用柯里化的写法
+		```
+			saveFormData = (dataType, event) => {
+				this.setState([dataType]: event.target.value)
+			}
+			
+			<input onChange={(event) => {this.saveFormData('username', event)}} />
+		```
+	
+## 高阶函数
+		接收的参数是一个函数、或者返回值仍然是一个函数，满足以上其中一点就是高阶函数。
+		
+		比如Promise、setTimeout、arr.map()等数组常用的方法
+	
+## 组件的生命周期
+	render()
+	挂载
+		### constructor () {
+			// 构造函数
+		}
+		### componentWillMount() {
+			// 组件将要挂载
+		}
+		每当组件状态改变时都会调用一次render
+		### render () {
+			// 初始化渲染，状态更新之后
+		}
+		### componentDidMount() {
+			// 组件已挂载,常用，一般做一些初始化的事
+		}
+		### componentWillUnmount () {
+			// 组件将要卸载
+		}
+	更新 3种情况
+		1.父组件render
+		2.setState() -> shouldComponentUpdate(组件是否应该被更新,自动调用，默认返回false，写的话需要添加返回布尔值)->componentWillUpdate(组件将要更新)->render->componentDidUpdate(组件已经更新)->componentWillUnmount
+		3.forceUpdate()强制更新 -> componentWillUpdate-> render->componentDidUpdate->componentWillUnmount 
+	
+	### componentWillReceiveProps即组件即将接受新的参数，但是组件第一次渲染不调用，可以接收参数props
+	
+	### 新的生命周期
+	
+## 组件的生命周期总结
+	1. 初始化阶段： 由ReactDOM.render()触发---初次渲染
+		1.constructor()
+		2.componentWillMount()
+		3.render()
+		4.componentDidMount() ====> 常用,一般在这个钩子中做一些初始化的事，例如：开启定时器、发送网络请求，订阅消息
+	2. 更新阶段，由组件内部this.setState()或父组件render触发
+		1.shouldComponentUpdate()
+		2.componentWillUpdate()
+		3.render()
+		4.componentDidUpdate()
+	3. 卸载组件： 由ReactDOM.unmountComponentAtNode() 触发
+		1. componentWillUnmount() ====>常用，一般在这个钩子中做一些收尾的事，例如：关闭定时器，取消订阅消息
+
+## 卸载组件
+	```			  	ReactDOM.unmountComponentAtNode(document.getElementById('test'))
+	```
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
