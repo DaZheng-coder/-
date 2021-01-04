@@ -363,7 +363,11 @@
 	
 	### componentWillReceiveProps即组件即将接受新的参数，但是组件第一次渲染不调用，可以接收参数props
 	
-	### 新的生命周期
+	### 新的生命周期（新版本下的生命周期）
+		componentWillMount、componentWillReceiveProps、componentWillUpdate将要废弃
+		
+		新增两个钩子： getDeriveStateFromProps、getSnapshotBeforeUpdate
+		
 	
 ## 组件的生命周期总结
 	1. 初始化阶段： 由ReactDOM.render()触发---初次渲染
@@ -382,21 +386,93 @@
 ## 卸载组件
 	```			  	ReactDOM.unmountComponentAtNode(document.getElementById('test'))
 	```
+
+## 新的生命周期钩子
+	### getDerivedStateFromProps(props)
+		即状态值都取决于props，少用
+		
+	### getSnapshotBeforeUpdate
+		在更新之前获取快照，可以参考官网新闻列表滚动
+
+## DOM的diffing算法
+	对比的最小力度是标签(节点)
+	1.虚拟DOM中key的作用：
+		1）简单地说，key是虚拟DOM对象的标识，在更新显示时key起着极其重要的重要
+		2）详细地说，当状态中的数据发生变化时，react会根据【新数据】生成【新的虚拟DOM】，随后React进行【新虚拟DOM】与【旧虚拟DOM】的diff比较，比较规则如下：
+			a.旧虚拟DOM中找到了与新虚拟DOM相同的key：
+				（1）若虚拟DOM中内容没变，直接使用之前的真实DOM
+				（2）若虚拟DOM中内容变了，则生成新的真实DOM，随后替换页面中之前的真实DOM
+			
+			b.旧虚拟DOM中未找到与新虚拟DOM相同的key
+				根据数据创建新的真实DOM，随后渲染到页面
+	2.用index作为key可能会引发的问题：
+		1. 若对数据进行： 逆序添加、逆序删除等破坏顺序操作：
+			会产生没有必要的真实DOM更新 ===》 界面效果没有问题，但效率低
+		2. 如果结构中还包含输入类的DOM：
+			会产生错误DOM更新 ===》 界面有问题
+		3. 注意！如果不存在对数据的逆序添加、逆序删除等破坏顺序操作，仅用于渲染列表用于展示，使用index作为key是没有问题的
+		
+	3. 开发中如何选择key？
+		1.最好使用每条数据的唯一标识作为key，比如id，手机号，身份证号，学号等唯一值
+		2.如果确定只是简单的展示数据，用index也是可以的
 	
+## React脚手架	
+	1.创建项目 create-react-app 项目名
+	2. css模块化
+		css文件名： index.module.css
+		jsx文件中引入： import hello from './index.module.css'
+		className={hello.title}
+
+##TodoList
+	### checkbox标签有个defaultChecked是否默认确认
+	### 键盘事件 
+		keydown、keyup一般用keyup确保键盘确认抬起
+		```
+			handleKeyUp = (event) => {
+				const {keyCode, target} = event 
+				// 判断按下是否是回车键
+				if(keyCode !== 13) return 
+				
+			}
+		```
+
+## React子传父
+	父组件通过props传给子组件一个函数，子组件调用该函数传递数据
 	
+	```
+		// 父组件代码
+		class Father extends React.Component {
+			childrenData = (data) => {
+				//获得子组件传递过来的数据
+				console.log(data)
+			}
+			
+			render() {
+				return (
+					<Children data={this.childrenData}/>
+				)
+			}
+		}
+		
+		// 子组件代码
+		class Children extends React.Component {
+			sendDataToFather = (event) => {
+				this.props.childrenData(event.target.value)
+			}
+		}
+	```
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+## 随机生成id的库 UUID
+		yarn add nanoid
+		```
+			import {nanoid} from 'nanoid'
+			
+			//调用
+			const id = nanoid()
+		```
+
+## 样式上的交互
+		
 	
 	
 	

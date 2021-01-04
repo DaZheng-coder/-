@@ -1,0 +1,15 @@
+.item {
+  border-top: none;
+  border-radius: 0;
+  padding: 3px;
+  display: flex;
+  justify-content: space-between;
+}
+.item:first-child {
+  border-top: 1px solid #ccc;
+  border-radius: 5px 5px 0 0;
+}
+
+.item:last-child {
+  border-radius: 0 0 5px 5px;
+}
