@@ -471,8 +471,97 @@
 			const id = nanoid()
 		```
 
-## 样式上的交互
+## todoList案例相关知识点
+	1.拆分组件、实现静态组件。注意：className、style写法
+	2.动态初始化列表，如何确定将数据放在哪个组件的state中？
+		-某个组件使用： 放在其自身的state
+		-某些组件使用：放在他们共同的父组件state中
+	3.关于父子之间通信：
+		1. 【父组件】和【子组件】传递数据：通过props传递
+		2. 【子组件】给【父组件】传递数据：通过props传递，要求父提前给子传递一个函数
+	4.注意defaultChecked和checked的区别，类似的还有：defaultValue和Value
+	5.状态在哪里，操作状态的方法就在哪里
+
+## react ajax
+	### 解决跨域
+		 1.开启代理
+			（1）在package.json中最后添加
+				"proxy": "http://localhost:5000"
+				*** 如果遇到需要请求多个服务器的情况：
+					在src中建立文件：setupProxy.js
+						在这个文件中用CJS（node）方式编写代码：
+							```
+								const proxy = require('http-proxy-middleware')
+								module.exports = function(app){
+									app.use(
+										proxy('/api1', {
+											target: 'http://localhost:5000',
+											changeOrigin:true,
+											pathRewrite:{'^/api1':''}
+										}),
+										proxy('/api2', {
+											target: 'http://localhost:5001',
+											changeOrigin:true,
+											pathRewrite:{'^/api2':''}
+										})
+									)
+								}
+							```
+	
+## axios发送请求
+	```
+		import axios from 'axios'
 		
+		axios.
+	```
+	
+## 连续解构赋值
+	结构this中的keyWordElement中的value
+	const {keyWordElement:{value}} = this
+	### 连续解构赋值改名
+	//取出obj2中的a中的b并改名为data
+	const {a:{b:data}} = obj2
+	
+## 兄弟组件间通信/消息订阅、发布机制
+	1.工具库： PubSubJS
+	2.下载：npm install pubsub-js --save
+	3.使用:
+		1) import PubSub from 'pubsub-js' //引入
+		2) PubSub.subscribe('delete', function(data){}) //订阅 
+		3) PubSub.publish('delete', data) //发布消息
+	4.案例：
+		A组件：
+			class A extends Component {
+				componentDidMount() {
+					// 订阅消息，并获取该消息的独有特征
+					this.token = PubSub.subscribe('messageName', (msg,data) => {
+						//参数：msg消息名称、data数据
+						console.log(data)
+					})
+				}
+				
+				componentWillUnmount() {
+					// 取消订阅
+					PubSub.unsubscribe(this.token)
+				}
+			}
+		
+		B组件：
+			class B extends Component {
+				// 触发事件
+				methodName = () => {
+					// 发布消息
+					PubSub.publish('messageName', {name: 'li', age: 18})
+				}
+			}
+
+## fetch发送请求
+	
+	
+	
+	
+	
+	
 	
 	
 	

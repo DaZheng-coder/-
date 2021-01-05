@@ -3,7 +3,6 @@ import React, { Component } from 'react'
 import './index.css'
 
 export default class Header extends Component {
-  
   handleKeyUp = (event) => {
     const {keyCode, target} = event
     if (keyCode !== 13) return 
