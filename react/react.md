@@ -556,13 +556,83 @@
 			}
 
 ## fetch发送请求
+
+## react-router-dom
+	1.react的一个插件库
+	2.专门用来实现一个SPA应用
+	3.基于react的项目基本都会用到此库
+	4.安装 yarn add react-router-dom
+## react-router-dom相关API	
+```
+	//导入
+	import {Link, BrowserRouter, Route} from 'react-router-dom'
+	//引入组件
+	import Home from './Home'
+	import About from './About'
 	
+	// to路径不识别大小写和"."
 	
+	class Nav extends React.Component {
+		render() {
+			return (
+				<BrowserRouter>
+					<div className="nav>
+						//编写路由链接
+						<Link to="/about">About</Link>
+						<Link to="/home">Home</Link>
+					<div className="nav>
+					<div className="router">
+						//注册路由
+						<Route path="/about" component={About} />
+						<Route path="/home" component={Home} />	
+					</div>
+				</BrowserRouter>
+			)
+		}
+	}
+```	
+可以在App外面包BrowseRouter
+```
+	App.jsx:
+		import {BrowserRouter} from 'react-router-dom'
+		ReactDOM.render(
+			<BrowserRouter>
+				<App />
+			</BrowserRouter>
+		, document.getElementById('root'))
+```
 	
-	
-	
-	
-	
-	
-	
-	
+### 路由组件放在pages里，区分components
+### 路由的基本使用
+		1.明确好界面中的导航区、展示区
+		2.导航区的a标签改为Link标签
+			<Link to="/xxxx">Demo</Link>
+		3.展示区写Route标签进行路径的匹配
+			<Route path="/xxxx" component={Demo}> />
+		4.<App>的最外侧包裹一个<BrowserRouter>或<HashRouter/>
+
+## 路由组件与一般组件	
+		1.区别：
+			（1）写法不同： 
+					一般组件：<Demo />
+					路由组件：<Route path="/demo" component={Demo} />
+			（2）存放位置不同：
+					一般组件： components
+					路由组件：pages
+			（3）接收到的props不同：
+					一般组件： 写组件标签时传递了什么，就能收到什么
+					路由组件：接收到三个固定的属性：
+						history：
+							go:f go(n)
+							goBack: f goBakc()
+							goForward: f goForward()
+							push: f push(path,state)
+							replace: f replace(path, state)
+						location：
+							pathname: '/about'
+							search: ""
+							state: undefined
+						match：
+							params: {}
+							path: '/about'
+							url: '/about'
