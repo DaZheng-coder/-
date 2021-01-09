@@ -611,6 +611,20 @@
 			<Route path="/xxxx" component={Demo}> />
 		4.<App>的最外侧包裹一个<BrowserRouter>或<HashRouter/>
 
+###	<Switch>组件包裹<Route>组件
+		Route默认不中断匹配，使用Switch包裹Route组件可以提高效率
+
+### <navLink>导航栏高亮，可传入属性activeClassName指定样式名
+	```
+		<NavLink activeClassName="demo-active" to="About">About</NavLink>
+	```
+
+### 标签体内容也是一个特殊的标签属性children，一样可以通过thisprops收集
+		封装组件MyNavLink：
+			<NavLink {...this.props}></NavLink>
+		使用组件MyNavLink:
+			<MyNavLink to="/home">Home</MyNavLink>
+
 ## 路由组件与一般组件	
 		1.区别：
 			（1）写法不同： 
@@ -636,3 +650,112 @@
 							params: {}
 							path: '/about'
 							url: '/about'
+							
+## 解决样式丢失问题： 							
+	1. public/index.html 中 引入样式时不写 ./ 写 /（常用）
+	2. public/index.html 中 引入样式时不写 ./ 写 %PUBLIC_URL% （常用）
+	3. 使用HashRouter
+							
+## 路由的模糊匹配和严格匹配
+		1.默认使用的是模糊匹配（【输入的路径】必须包含要【匹配的路径】，且顺序要一致）
+		2.开启严格匹配：<Route exact={true} path="/about" component={About} />
+		3.严格匹配不要随便开启，需要再开，有些时候会导致无法继续匹配二级路由
+
+## Redirect重定向的使用
+		1.一般写在所有路由注册的最下方，当所有路由都无法匹配时，跳转到Redirect指定的路由
+		2.具体编码：
+			<Switch>
+				<Route path="/about" component={About}/>
+				<Route path="/home" component={Home}/>
+				<Redirect to="/about" />
+			</Switch>
+							
+							
+		function replaceByIndex(str, index, chat) {
+			if (!str.length || index < 0) return 
+			return str.slice(0,index) + char + str.slice(index+1)
+		}
+
+## 嵌套路由
+	1.注册子路由时要写上父路由的path值
+	2.路由的匹配时按照注册路由的顺序进行的
+							
+## 向路由组件传递参数数据						
+	1.携带params参数					
+		路由链接（携带参数）： <Link to="/demo/test/tom/15">详情</Link>
+		注册路由（声明接收）：<Route path="/demo/test/:name/:age" component={Test}>
+		接受参数: const {id,title} = jthis.props.match.params
+							
+	2.search参数
+		路由链接（携带参数）： <Link to='/demo/test?name=to&age=15'>详情</Link>
+		注册路由（无需声明，正常注册即可）：<Route path="/demo/test" component={Test}>
+		接收参数：const {search} = this.props.location
+		备注：获取到的search是urlencoded编码字符串，需要借助querystring库解析
+	
+	3.state参数（不同于组件的state，是路由独有的一个属性）						
+		路由链接（携带参数）： <Link to={{path:'/demo/test', state:{name: 'tom',age:18}}}>详情</Link>
+		注册路由（无需声明，正常注册即可）：<Route path="/demo/test" component={Test}>
+		接收参数：this.props.location.state
+		备注：刷新也可以保留参数				
+							
+## 编程式路由：
+	1.this.props.history.push('/demo/test', {name: 'lihua', age: 18})
+	2.this.props.history.replace()
+	
+## withRouter
+	1.用处：withRouter可以加工一般组件，让一般组件具备路由组件所特有的API，比如history
+	withRouter的返回值是一个新组件
+	2.使用：
+		一般组件:
+			Header.jsx
+			```
+				import {withRouter} from 'react-router-dom'
+				class Header extends React.Component {}
+				export default withRouter(Header)
+			```
+
+## BrowserRouter 与 HashRouter 的区别
+	1. 底层原理不一样：
+		BrowserRouter使用的是H5的history API 不兼容ie9及以下版本
+		HashRouter使用的是URL的哈希值
+	2. url表现形式不一样
+		BrowserRouter的路径中没有#，例如:localhost:3000/demo/test
+		HashRouter的路径包含# localhost:3000/#/demo/test
+	3. 刷新后对路由state参数的影响
+		(1)BrowserRouter没有任何影响，因为state保存在history对象中
+		(2)HashRouter刷新后会导致路由由state参数的丢失
+	4.备注：HashRouter可以解决一些路径错误相关的问题
+							
+## antd的按需引入+自定主题
+	1.安装依赖： yarn add react-app-rewired customize-cra babel-plugin-import less less-loader
+	2.修改package.json
+	```javascript
+		"scripts":{
+			"start": "react-app-rewired start",
+			"build":"react-app-rewired build",
+			"test":"react-app-rewired test",
+			"eject":"react-scripts eject"
+		}
+	```
+	3.根目录下创建config-overrides.js
+	```javascript
+		//配置具体的修改规则
+		const {override, fixBabelImports, addLessLoader} = require('customize-cra')
+		module.exports = override(
+			fixBabelImports('import', {
+				libraryName: 'antd',
+				libraryDirectory: 'es',
+				style: true
+			}),
+			addLessLoader({
+				lessOptions:{
+				javascriptEnabled: true,
+					modifyVars: {
+						'@primary-color': 'green'
+					}
+				}
+			})
+		)
+	```
+	4.备注： 不用在组件里亲自引入样式了，即： import 'antd/dist/antd.css'应该删除						
+							
