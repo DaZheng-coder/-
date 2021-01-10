@@ -5,8 +5,9 @@
  * @LastEditTime: 2021-01-09 22:09:47
  * @Description: file content
  */
-import {createStore} from 'redux'
+import {createStore, applyMiddleware} from 'redux'
 
 import countReducer from './count_reducer'
+import thunk from 'redux-thunk'
 
-export default createStore(countReducer)
+export default createStore(countReducer, applyMiddleware(thunk))
