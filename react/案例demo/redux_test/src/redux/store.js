@@ -5,9 +5,15 @@
  * @LastEditTime: 2021-01-09 22:09:47
  * @Description: file content
  */
-import {createStore, applyMiddleware} from 'redux'
+import {createStore, applyMiddleware,combineReducers} from 'redux'
 
-import countReducer from './count_reducer'
+import countReducer from './reducer/count'
+import personReducer from './reducer/person'
 import thunk from 'redux-thunk'
 
-export default createStore(countReducer, applyMiddleware(thunk))
+const allReducer = combineReducers({
+  he: countReducer,
+  rens: personReducer
+})
+
+export default createStore(allReducer, applyMiddleware(thunk))

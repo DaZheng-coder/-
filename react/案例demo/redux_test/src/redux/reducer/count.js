@@ -5,7 +5,7 @@
  * @LastEditTime: 2021-01-09 22:37:38
  * @Description: file content
  */
- import {INCREMENT,DECREMENT} from './constant'
+ import {INCREMENT,DECREMENT} from '../constant'
 
 const initState = 0
 export default function countReducer(preState=initState, action) {
