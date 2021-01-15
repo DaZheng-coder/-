@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import {createAddPersonAction} from '../../redux/action/person'
+import {addPerson} from '../../redux/action/person'
 import {connect} from 'react-redux'
 import {nanoid} from 'nanoid'
 
@@ -10,7 +10,7 @@ class Person extends Component {
     const name = this.nameNode.value
     const age = this.ageNode.value
     const id = nanoid()
-    this.props.add({id,name,age})
+    this.props.addPerson({id,name,age})
     this.nameNode.value = ''
     this.ageNode.value = ''
   }
@@ -19,7 +19,7 @@ class Person extends Component {
     const {persons} = this.props
     return (
       <div>
-        <h2>和:{this.props.he}</h2>
+        <h2>和:{this.props.count}</h2>
         <input ref={c => this.nameNode = c} type="text" placeholder="输入姓名"/>
         <input ref={c => this.ageNode = c} type="text" placeholder="输入年龄"/>
         <button onClick={this.addPerson}>确认</button>
@@ -35,8 +35,9 @@ class Person extends Component {
 }
 
 export default connect(
-  state=>({persons: state.rens, he: state.he}),
+  state=>({persons: state.persons, count: state.count}),
   {
-    add: createAddPersonAction
+    addPerson
   }
 )(Person)
+

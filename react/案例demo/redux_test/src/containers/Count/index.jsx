@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {createIncrementAction, createDecrementAction, createIncrementAsyncAction} from '../../redux/action/count'
+import {increment, decrement, incrementAsync} from '../../redux/action/count'
 
 import {connect} from 'react-redux'
 
@@ -21,25 +21,25 @@ class Count extends Component {
   increment = () => {
     const {value} = this.selectNumber
     // store.dispatch(createIncrementAction(value*1))
-    this.props.jia(value*1)
+    this.props.increment(value*1)
   }
   decrement = () => {
     const {value} = this.selectNumber
-    this.props.jian(value*1)
+    this.props.decrement(value*1)
     // store.dispatch(createDecrementAction(value*1))
   }
   incrementIfOdd = () => {
     const {value} = this.selectNumber
     const {count} = this.props
     if (count % 2 !== 0) {
-      this.props.jia(value*1)
+      this.props.increment(value*1)
       // store.dispatch(createIncrementAction(value*1))
     }
   }
   incrementAsync = () => {
     const {value} = this.selectNumber
     // setTimeout(() => {
-      this.props.jiaAsync(value*1, 500)
+      this.props.incrementAsync(value*1, 500)
       // store.dispatch(createIncrementAsyncAction(value*1, 1000))
     // }, 500)
   }
@@ -48,7 +48,7 @@ class Count extends Component {
     // console.log(this.props)
     return (
       <div>
-        <h2>人数：{this.props.renshu}</h2>
+        <h2>人数：{this.props.personsNum}</h2>
         <h1>当前求和为：{this.props.count}</h1>
         <select ref={c => this.selectNumber = c}>
           <option value="1">1</option>
@@ -65,10 +65,10 @@ class Count extends Component {
 }
 
 export default connect( 
-  state=>({count:state.he, renshu: state.rens.length}),
+  state=>({count:state.count, personsNum: state.persons.length}),
   {
-    jia: createIncrementAction,
-    jian: createDecrementAction,
-    jiaAsync: createIncrementAsyncAction
+    increment,
+    decrement,
+    incrementAsync
   }
 )(Count)

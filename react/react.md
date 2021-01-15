@@ -803,6 +803,13 @@
 			3）备注：容器组件中的store是靠props传进去的，而不是在容器组件中直接引入
 			4）备注2：mapDispatchToProps也可以是一个对象
 
+	## 求和案例_react_redux数据共享版
+		（1）定义一个Person组件，和Count组件通过redux共享数据
+		（2）为Person组件编写：reducer和count的Reducer要使用combineReducer进行合并
+		（3）交给store的是总reducer，最后注意在组建中取出状态的时候，记得“取到位”
 
-
-		
+	## 求和案例_react_redux开发者工具的使用
+		（1）yarn add redux-devtools-extension
+		（2）store中进行配置
+			import {composeWithDevTools} from 'redux-devtools-extension'
+			const store = createStore(allReducer, composeWithDevTools(applayMiddleware(thunk)))
